@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 const App = () => {
-  const [inputAmount, setInputAmount] = useState("");
+  const [inputAmount, setInputAmount] = useState(""); // Dữ liệu nhập vào (chuỗi)
   const [outputAmount, setOutputAmount] = useState("");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("USD");
@@ -13,10 +13,13 @@ const App = () => {
 
   useEffect(() => {
     calculateSwap();
-  }, [fromCurrency, toCurrency]); 
+  }, [fromCurrency, toCurrency]);
 
   const calculateSwap = async () => {
-    if (isNaN(inputAmount) || inputAmount <= 0) {
+    // Chuyển đổi inputAmount thành số (bỏ dấu phân cách)
+    const numericAmount = parseFloat(inputAmount.replace(/\./g, ""));
+
+    if (isNaN(numericAmount) || numericAmount <= 0) {
       setOutputAmount("");
       return;
     }
@@ -28,7 +31,7 @@ const App = () => {
       const fromRate = data.conversion_rates[fromCurrency];
       const toRate = data.conversion_rates[toCurrency];
 
-      const result = inputAmount * (toRate / fromRate);
+      const result = numericAmount * (toRate / fromRate);
       const formattedResult = result.toLocaleString("en-US", {
         minimumFractionDigits: 3,
         maximumFractionDigits: 3,
@@ -47,11 +50,27 @@ const App = () => {
   };
 
   const validateAndSwap = () => {
-    if (isNaN(inputAmount) || inputAmount <= 0) {
+    // Chuyển đổi inputAmount thành số (bỏ dấu phân cách)
+    const numericAmount = parseFloat(inputAmount.replace(/\./g, ""));
+
+    if (isNaN(numericAmount) || numericAmount <= 0) {
       alert("Please enter a valid amount.");
       return;
     }
     swapCurrencies();
+  };
+
+  // Hàm để xử lý và định dạng khi nhập số vào inputAmount
+  const handleAmountChange = (e) => {
+    let value = e.target.value;
+
+    // Loại bỏ tất cả các ký tự không phải là số và dấu phân cách
+    value = value.replace(/[^0-9]/g, "");
+
+    // Định dạng số với dấu phân cách khi người dùng nhập
+    const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    setInputAmount(formattedValue);
   };
 
   return (
@@ -71,7 +90,7 @@ const App = () => {
             <input
               id="input-amount"
               value={inputAmount}
-              onChange={(e) => setInputAmount(e.target.value)}
+              onChange={handleAmountChange} // Gọi hàm để xử lý nhập liệu
             />
             <select
               id="from-currency"
@@ -103,7 +122,6 @@ const App = () => {
             />
           </svg>
         </button>
-
         <div className="output-container">
           <label htmlFor="output-amount">Amount to receive</label>
           <div className="content">
