@@ -16,7 +16,6 @@ const App = () => {
   }, [fromCurrency, toCurrency]);
 
   const calculateSwap = async () => {
-    // Chuyển đổi inputAmount thành số (bỏ dấu phân cách)
     const numericAmount = parseFloat(inputAmount.replace(/\./g, ""));
 
     if (isNaN(numericAmount) || numericAmount <= 0) {
@@ -50,7 +49,6 @@ const App = () => {
   };
 
   const validateAndSwap = () => {
-    // Chuyển đổi inputAmount thành số (bỏ dấu phân cách)
     const numericAmount = parseFloat(inputAmount.replace(/\./g, ""));
 
     if (isNaN(numericAmount) || numericAmount <= 0) {
@@ -60,14 +58,11 @@ const App = () => {
     swapCurrencies();
   };
 
-  // Hàm để xử lý và định dạng khi nhập số vào inputAmount
   const handleAmountChange = (e) => {
     let value = e.target.value;
 
-    // Loại bỏ tất cả các ký tự không phải là số và dấu phân cách
     value = value.replace(/[^0-9]/g, "");
 
-    // Định dạng số với dấu phân cách khi người dùng nhập
     const formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
     setInputAmount(formattedValue);
@@ -90,7 +85,7 @@ const App = () => {
             <input
               id="input-amount"
               value={inputAmount}
-              onChange={handleAmountChange} // Gọi hàm để xử lý nhập liệu
+              onChange={handleAmountChange}
             />
             <select
               id="from-currency"
